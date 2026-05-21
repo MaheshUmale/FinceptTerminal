@@ -111,8 +111,8 @@ QVector<DashboardTemplate> all_dashboard_templates() {
              gi("indices", 0, 0, 4, 5, 3, 4),
              gi("top_movers", 4, 0, 4, 5, 3, 4),
              gi("econ_calendar", 8, 0, 4, 5, 3, 4),
-             gic("stock_quote", 0, 5, 4, 5, {{"symbol", "RELIANCE.NS"}}),
-             gic("watchlist", 4, 5, 8, 5, {{"symbols", QJsonArray{"RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS"}}}),
+             gic("broker_quote", 0, 5, 4, 5, {{"symbol", "RELIANCE"}}),
+             gic("watchlist", 4, 5, 8, 5, {{"symbols", QJsonArray{"RELIANCE", "TCS", "HDFCBANK", "INFY", "ICICIBANK"}}}),
              gi("news", 0, 10, 12, 4),
          }},
 
@@ -121,12 +121,12 @@ QVector<DashboardTemplate> all_dashboard_templates() {
          QT_TRANSLATE_NOOP("fincept::screens::DashboardTemplates", "India Multichart"),
          QT_TRANSLATE_NOOP("fincept::screens::DashboardTemplates", "Grid of charts for top Indian companies"),
          {
-             gic("stock_quote", 0, 0, 4, 4, {{"symbol", "RELIANCE.NS"}}),
-             gic("stock_quote", 4, 0, 4, 4, {{"symbol", "TCS.NS"}}),
-             gic("stock_quote", 8, 0, 4, 4, {{"symbol", "HDFCBANK.NS"}}),
-             gic("stock_quote", 0, 4, 4, 4, {{"symbol", "INFY.NS"}}),
-             gic("stock_quote", 4, 4, 4, 4, {{"symbol", "ICICIBANK.NS"}}),
-             gic("stock_quote", 8, 4, 4, 4, {{"symbol", "SBIN.NS"}}),
+             gic("broker_chart", 0, 0, 4, 4, {{"symbol", "RELIANCE"}}),
+             gic("broker_chart", 4, 0, 4, 4, {{"symbol", "TCS"}}),
+             gic("broker_chart", 8, 0, 4, 4, {{"symbol", "HDFCBANK"}}),
+             gic("broker_chart", 0, 4, 4, 4, {{"symbol", "INFY"}}),
+             gic("broker_chart", 4, 4, 4, 4, {{"symbol", "ICICIBANK"}}),
+             gic("broker_chart", 8, 4, 4, 4, {{"symbol", "SBIN"}}),
          }},
     };
 }
