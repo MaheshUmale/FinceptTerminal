@@ -1,4 +1,6 @@
 ﻿#include "screens/dashboard/canvas/DashboardTemplates.h"
+#include <QJsonArray>
+#include <QJsonObject>
 
 namespace fincept::screens {
 
@@ -7,6 +9,15 @@ static GridItem gi(const char* id, int x, int y, int w, int h, int mw = 2, int m
     GridItem item;
     item.id = id;
     item.cell = {x, y, w, h, mw, mh};
+    return item;
+}
+
+// Helper: create a GridItem with config
+static GridItem gic(const char* id, int x, int y, int w, int h, QJsonObject config) {
+    GridItem item;
+    item.id = id;
+    item.cell = {x, y, w, h};
+    item.config = config;
     return item;
 }
 
@@ -90,6 +101,32 @@ QVector<DashboardTemplate> all_dashboard_templates() {
              gi("econ_calendar", 8, 4, 4, 5),
              gi("screener", 0, 5, 6, 5, 3, 4),
              gi("indices", 6, 5, 6, 4),
+         }},
+
+        // ── India Market Overview ─────────────────────────────────────────────
+        {"india_market",
+         QT_TRANSLATE_NOOP("fincept::screens::DashboardTemplates", "India Market Overview"),
+         QT_TRANSLATE_NOOP("fincept::screens::DashboardTemplates", "Nifty, Sensex, major Indian stocks and news"),
+         {
+             gi("indices", 0, 0, 4, 5, 3, 4),
+             gi("top_movers", 4, 0, 4, 5, 3, 4),
+             gi("econ_calendar", 8, 0, 4, 5, 3, 4),
+             gic("stock_quote", 0, 5, 4, 5, {{"symbol", "RELIANCE.NS"}}),
+             gic("watchlist", 4, 5, 8, 5, {{"symbols", QJsonArray{"RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS"}}}),
+             gi("news", 0, 10, 12, 4),
+         }},
+
+        // ── India Multichart ──────────────────────────────────────────────────
+        {"india_multichart",
+         QT_TRANSLATE_NOOP("fincept::screens::DashboardTemplates", "India Multichart"),
+         QT_TRANSLATE_NOOP("fincept::screens::DashboardTemplates", "Grid of charts for top Indian companies"),
+         {
+             gic("stock_quote", 0, 0, 4, 4, {{"symbol", "RELIANCE.NS"}}),
+             gic("stock_quote", 4, 0, 4, 4, {{"symbol", "TCS.NS"}}),
+             gic("stock_quote", 8, 0, 4, 4, {{"symbol", "HDFCBANK.NS"}}),
+             gic("stock_quote", 0, 4, 4, 4, {{"symbol", "INFY.NS"}}),
+             gic("stock_quote", 4, 4, 4, 4, {{"symbol", "ICICIBANK.NS"}}),
+             gic("stock_quote", 8, 4, 4, 4, {{"symbol", "SBIN.NS"}}),
          }},
     };
 }
