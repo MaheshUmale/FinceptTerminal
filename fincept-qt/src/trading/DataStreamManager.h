@@ -76,6 +76,7 @@ class DataStreamManager : public QObject
     void on_orders_for_hub(const QString& account_id, const QVector<BrokerOrderInfo>& orders);
     void on_funds_for_hub(const QString& account_id, const BrokerFunds& funds);
     void on_quote_for_hub(const QString& account_id, const QString& symbol, const BrokerQuote& quote);
+    void on_candles_for_hub(const QString& account_id, const QVector<BrokerCandle>& candles);
 
     bool hub_registered_ = false;
 

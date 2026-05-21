@@ -1,7 +1,9 @@
 ﻿#include "screens/dashboard/canvas/WidgetRegistry.h"
 
 #include "screens/dashboard/widgets/AgentErrorsWidget.h"
+#include "screens/dashboard/widgets/BrokerChartWidget.h"
 #include "screens/dashboard/widgets/BrokerHoldingsWidget.h"
+#include "screens/dashboard/widgets/BrokerQuoteWidget.h"
 #include "screens/dashboard/widgets/CommoditiesWidget.h"
 #include "screens/dashboard/widgets/CryptoTickerWidget.h"
 #include "screens/dashboard/widgets/CryptoWidget.h"
@@ -127,6 +129,14 @@ WidgetRegistry::WidgetRegistry() {
     register_widget({"holdings", QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Holdings"), QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Portfolio"),
                      QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Long-term broker holdings — avg cost, LTP, P&L %"), 6, 5, 3, 3,
                      [](const QJsonObject& cfg) { return new widgets::BrokerHoldingsWidget(cfg); }});
+
+    register_widget({"broker_quote", QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Broker Quote"), QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Trading"),
+                     QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Real-time quote from connected Indian/Global brokers"), 4, 5, 2, 3,
+                     [](const QJsonObject& cfg) { return new widgets::BrokerQuoteWidget(cfg); }});
+
+    register_widget({"broker_chart", QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Broker Chart"), QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Trading"),
+                     QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Real-time chart from connected Indian/Global brokers"), 6, 6, 4, 4,
+                     [](const QJsonObject& cfg) { return new widgets::BrokerChartWidget(cfg); }});
 
     // ── Tools ────────────────────────────────────────────────────────────────
     register_widget({"video_player", QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Live TV / Streams"), QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Tools"),

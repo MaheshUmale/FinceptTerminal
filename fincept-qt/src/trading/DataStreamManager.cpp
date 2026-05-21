@@ -150,6 +150,8 @@ void DataStreamManager::wire_stream_signals(AccountDataStream* stream) {
                 this, &DataStreamManager::on_funds_for_hub);
         connect(stream, &AccountDataStream::quote_updated,
                 this, &DataStreamManager::on_quote_for_hub);
+        connect(stream, &AccountDataStream::candles_fetched,
+                this, &DataStreamManager::on_candles_for_hub);
     }
 }
 
@@ -227,6 +229,12 @@ void DataStreamManager::ensure_registered_with_hub() {
     quote_policy.min_interval_ms = 1 * 1000;
     hub.set_policy_pattern(QStringLiteral("broker:*:*:quote:*"), quote_policy);
 
+    // broker:<id>:<account>:candles:<symbol>:<timeframe> — TTL 30s
+    fincept::datahub::TopicPolicy candles_policy;
+    candles_policy.ttl_ms = 30 * 1000;
+    candles_policy.min_interval_ms = 1 * 1000;
+    hub.set_policy_pattern(QStringLiteral("broker:*:*:candles:*"), candles_policy);
+
     hub_registered_ = true;
 
     // Back-wire any streams that were created before registration.
@@ -242,6 +250,8 @@ void DataStreamManager::ensure_registered_with_hub() {
                 this, &DataStreamManager::on_funds_for_hub);
         connect(s, &AccountDataStream::quote_updated,
                 this, &DataStreamManager::on_quote_for_hub);
+        connect(s, &AccountDataStream::candles_fetched,
+                this, &DataStreamManager::on_candles_for_hub);
     }
 
     LOG_INFO(DSM_TAG, "Registered with DataHub (broker:*)");
@@ -291,6 +301,21 @@ void DataStreamManager::on_quote_for_hub(const QString& account_id, const QStrin
     if (!stream) return;
     const QString topic = broker_topic(stream->broker_id(), account_id, QStringLiteral("quote"), symbol);
     fincept::datahub::DataHub::instance().publish(topic, QVariant::fromValue(quote));
+}
+
+void DataStreamManager::on_candles_for_hub(const QString& account_id, const QVector<BrokerCandle>& candles) {
+    if (!hub_registered_) return;
+    auto* stream = stream_for(account_id);
+    if (!stream) return;
+    // Note: the sub-topic for candles in topic-policy is candles:*
+    // The publisher provides symbol and timeframe.
+    // For now we use a generic candles topic or append symbol:tf if available.
+    // Since AccountDataStream::candles_fetched doesn't provide symbol/tf in the signal,
+    // we use the last requested symbol/tf from the stream.
+    const QString sym = stream->selected_symbol();
+    // Assuming 15m default if not detectable
+    const QString topic = broker_topic(stream->broker_id(), account_id, QStringLiteral("candles"), sym + ":15m");
+    fincept::datahub::DataHub::instance().publish(topic, QVariant::fromValue(candles));
 }
 
 } // namespace fincept::trading
