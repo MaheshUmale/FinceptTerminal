@@ -18,6 +18,10 @@ QList<LayoutTemplates::Persona> LayoutTemplates::personas() {
          QStringLiteral("Equity research with fundamentals, news, and financials.")},
         {QStringLiteral("macro_economist"),   QStringLiteral("Macro Economist"),
          QStringLiteral("DBnomics series, economic calendar, world maps.")},
+        {QStringLiteral("india_trader"),      QStringLiteral("India Trader"),
+         QStringLiteral("Nifty, Sensex, and major Indian stocks overview.")},
+        {QStringLiteral("india_multichart"),  QStringLiteral("India Multichart"),
+         QStringLiteral("Grid of live charts for top Indian companies.")},
     };
 }
 
@@ -56,6 +60,22 @@ Workspace LayoutTemplates::make(const QString& persona_id) {
         w.name = QStringLiteral("Macro Economist");
         p.type_id = QStringLiteral("economics");
         p.title = QStringLiteral("Economics");
+    } else if (persona_id == QStringLiteral("india_trader")) {
+        w.name = QStringLiteral("India Trader");
+        p.type_id = QStringLiteral("dashboard");
+        p.title = QStringLiteral("India Market");
+        // Dashboards are stateful; the first show will apply the template if configured.
+        // We set the initial template via the panel's state blob.
+        QJsonObject cfg;
+        cfg["template"] = "india_market";
+        p.state_blob = QJsonDocument(cfg).toJson();
+    } else if (persona_id == QStringLiteral("india_multichart")) {
+        w.name = QStringLiteral("India Multichart");
+        p.type_id = QStringLiteral("dashboard");
+        p.title = QStringLiteral("India Multichart");
+        QJsonObject cfg;
+        cfg["template"] = "india_multichart";
+        p.state_blob = QJsonDocument(cfg).toJson();
     } else {
         // Unknown persona — fall through to a blank dashboard frame so the
         // user always gets a usable window.

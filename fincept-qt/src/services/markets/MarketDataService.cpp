@@ -664,8 +664,8 @@ void MarketDataService::fetch_history(const QString& symbol, const QString& peri
 // ── Static symbol lists ─────────────────────────────────────────────────────
 
 QStringList MarketDataService::indices_symbols() {
-    return {"^GSPC", "^DJI",  "^IXIC", "^RUT",      "^FTSE",  "^GDAXI",
-            "^FCHI", "^N225", "^HSI",  "000001.SS", "^BSESN", "^NSEI"};
+    return {"^NSEI", "^BSESN", "^NSEBANK", "^GSPC", "^DJI",  "^IXIC", "^RUT",      "^FTSE",  "^GDAXI",
+            "^FCHI", "^N225", "^HSI",  "000001.SS"};
 }
 
 QStringList MarketDataService::forex_symbols() {
