@@ -58,6 +58,7 @@ def main():
         print("Ensure you check 'Desktop development with C++' during installation.\n")
         input("Press Enter to continue if you think this is a mistake, or Ctrl+C to abort...")
 
+    # run_command([sys.executable, f"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat", "x64"])
     # 3. Install/Upgrade build tools via pip
     print("\n[1/3] Installing build tools (aqtinstall, cmake, ninja)...")
     if not run_command([sys.executable, "-m", "pip", "install", "--upgrade", "aqtinstall", "cmake", "ninja"]):
@@ -90,13 +91,18 @@ def main():
 
     os.chdir(app_dir)
 
+    # run "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" x64 && python -m cmake -S . --preset win-release -DCMAKE_PREFIX_PATH=D:\FinceptTerminal\.qt\6.8.3\msvc2022_64 -DOPENSSL_ROOT_DIR="C:/Program Files/OpenSSL-Win64"
+    
+    
     # Use the absolute path to the freshly installed Qt
     # Call cmake via python -m cmake to ensure it's found even if not in PATH
     # Explicitly point to the source directory -S fincept-qt
     # We attempt to run within the vcvarsall environment if possible, but
     # since we're already in Python, the easiest way for the user is to
     # run run_local.bat which handles the environment setup.
-    if not run_command([sys.executable, "-m", "cmake", "-S", ".", "--preset", "win-release", f"-DCMAKE_PREFIX_PATH={qt_path}"]):
+    #  d:\py_code_workspace\.venv\Scripts\python.exe -m cmake -S . --preset win-release -DCMAKE_PREFIX_PATH=D:\FinceptTerminal\.qt\6.8.3\msvc2022_64 -DOPENSSL_ROOT_DIR="C:/Program Files/OpenSSL-Win64"
+
+    if not run_command([sys.executable, "-m", "cmake", "-S", ".", "--preset", "win-release", f"-DCMAKE_PREFIX_PATH={qt_path}" , f" -DCMAKE_PREFIX_PATH=D:\FinceptTerminal\.qt\6.8.3\msvc2022_64", f" -DOPENSSL_ROOT_DIR=C:/Program Files/OpenSSL-Win64"]):
         print("\nError: CMake configuration failed.")
         print("Common fix: Ensure you have Visual Studio 2022 installed with C++ support.")
         print("Tip: If detection fails, try running this script from the 'Developer Command Prompt for VS 2022'.")
