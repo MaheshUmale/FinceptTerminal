@@ -102,6 +102,29 @@ BrokerQuoteWidget::BrokerQuoteWidget(const QJsonObject& config, QWidget* parent)
     set_loading(true);
 }
 
+QJsonObject BrokerQuoteWidget::config() const {
+    QJsonObject cfg;
+    cfg["broker_id"] = broker_id_;
+    cfg["account_id"] = account_id_;
+    cfg["symbol"] = symbol_;
+    return cfg;
+}
+
+void BrokerQuoteWidget::apply_config(const QJsonObject& cfg) {
+    if (cfg.contains("symbol"))
+        symbol_ = cfg.value("symbol").toString().toUpper();
+    if (cfg.contains("account_id"))
+        account_id_ = cfg.value("account_id").toString();
+    if (cfg.contains("broker_id"))
+        broker_id_ = cfg.value("broker_id").toString();
+
+    set_title(tr("%1: %2").arg(broker_id_.toUpper(), symbol_.toUpper()));
+    if (ticker_label_) ticker_label_->setText(symbol_);
+
+    if (isVisible())
+        hub_resubscribe();
+}
+
 void BrokerQuoteWidget::apply_styles() {
     price_label_->setStyleSheet(QString("color: %1; font-size: 28px; font-weight: bold; background: transparent;")
                                     .arg(ui::colors::TEXT_PRIMARY()));

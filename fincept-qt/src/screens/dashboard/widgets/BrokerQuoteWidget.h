@@ -16,6 +16,9 @@ class BrokerQuoteWidget : public BaseWidget {
   public:
     explicit BrokerQuoteWidget(const QJsonObject& config = {}, QWidget* parent = nullptr);
 
+    QJsonObject config() const override;
+    void apply_config(const QJsonObject& cfg) override;
+
   protected:
     void on_theme_changed() override;
     void showEvent(QShowEvent* e) override;

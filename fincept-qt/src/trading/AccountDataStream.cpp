@@ -387,9 +387,9 @@ void AccountDataStream::fetch_candles(const QString& symbol, const QString& time
                 }, Qt::QueuedConnection);
             return;
         }
-        QMetaObject::invokeMethod(self, [self, acct_id, data = *result.data]() {
+        QMetaObject::invokeMethod(self, [self, acct_id, symbol, timeframe, data = *result.data]() {
             if (!self) return;
-            emit self->candles_fetched(acct_id, data);
+            emit self->candles_fetched(acct_id, symbol, timeframe, data);
         }, Qt::QueuedConnection);
     });
 }

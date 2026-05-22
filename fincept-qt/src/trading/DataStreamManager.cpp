@@ -303,18 +303,15 @@ void DataStreamManager::on_quote_for_hub(const QString& account_id, const QStrin
     fincept::datahub::DataHub::instance().publish(topic, QVariant::fromValue(quote));
 }
 
-void DataStreamManager::on_candles_for_hub(const QString& account_id, const QVector<BrokerCandle>& candles) {
-    if (!hub_registered_) return;
+void DataStreamManager::on_candles_for_hub(const QString& account_id, const QString& symbol,
+                                           const QString& timeframe, const QVector<BrokerCandle>& candles) {
+    if (!hub_registered_)
+        return;
     auto* stream = stream_for(account_id);
-    if (!stream) return;
-    // Note: the sub-topic for candles in topic-policy is candles:*
-    // The publisher provides symbol and timeframe.
-    // For now we use a generic candles topic or append symbol:tf if available.
-    // Since AccountDataStream::candles_fetched doesn't provide symbol/tf in the signal,
-    // we use the last requested symbol/tf from the stream.
-    const QString sym = stream->selected_symbol();
-    // Assuming 15m default if not detectable
-    const QString topic = broker_topic(stream->broker_id(), account_id, QStringLiteral("candles"), sym + ":15m");
+    if (!stream)
+        return;
+    const QString topic =
+        broker_topic(stream->broker_id(), account_id, QStringLiteral("candles"), symbol + ":" + timeframe);
     fincept::datahub::DataHub::instance().publish(topic, QVariant::fromValue(candles));
 }
 

@@ -58,6 +58,9 @@ class BaseWidget : public QFrame {
     /// by the canvas when the user edits a config. Default: no-op.
     virtual void apply_config(const QJsonObject& /*cfg*/) {}
 
+    /// Direct config update — used for group/multichart controls.
+    virtual void set_config(const QJsonObject& cfg) { apply_config(cfg); emit config_changed(cfg); }
+
   signals:
     void close_requested();
     void refresh_requested();

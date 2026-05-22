@@ -118,9 +118,38 @@ DashboardScreen::DashboardScreen(QWidget* parent) : QWidget(parent) {
     // ── Canvas signals → toolbar/statusbar ──
     connect(canvas_, &DashboardCanvas::widget_count_changed, toolbar_, &DashboardToolBar::set_widget_count);
     connect(canvas_, &DashboardCanvas::widget_count_changed, status_bar_, &DashboardStatusBar::set_widget_count);
-    connect(canvas_, &DashboardCanvas::layout_changed, this, [this](const GridLayout&) { save_timer_->start(); });
+    connect(canvas_, &DashboardCanvas::layout_changed, this, [this](const GridLayout&) {
+        save_timer_->start();
+        // Show multichart controls if any broker_chart or broker_quote exists
+        bool has_broker_widgets = canvas_->findChild<widgets::BrokerChartWidget*>() != nullptr ||
+                                  canvas_->findChild<widgets::BrokerQuoteWidget*>() != nullptr;
+        toolbar_->set_multichart_controls_visible(has_broker_widgets);
+    });
 
     // ── Toolbar buttons ──
+    connect(toolbar_, &DashboardToolBar::symbol_group_changed, this, [this](const QString& sym) {
+        const auto widgets = canvas_->findChildren<widgets::BrokerChartWidget*>();
+        for (auto* w : widgets) {
+            QJsonObject cfg = w->config();
+            cfg["symbol"] = sym;
+            w->set_config(cfg);
+        }
+        const auto quotes = canvas_->findChildren<widgets::BrokerQuoteWidget*>();
+        for (auto* w : quotes) {
+            QJsonObject cfg = w->config();
+            cfg["symbol"] = sym;
+            w->set_config(cfg);
+        }
+    });
+    connect(toolbar_, &DashboardToolBar::timeframe_group_changed, this, [this](const QString& tf) {
+        const auto widgets = canvas_->findChildren<widgets::BrokerChartWidget*>();
+        for (auto* w : widgets) {
+            QJsonObject cfg = w->config();
+            cfg["timeframe"] = tf;
+            w->set_config(cfg);
+        }
+    });
+
     connect(toolbar_, &DashboardToolBar::toggle_pulse_clicked, this, [this]() {
         pulse_visible_ = !pulse_visible_;
         market_pulse_->setVisible(pulse_visible_);

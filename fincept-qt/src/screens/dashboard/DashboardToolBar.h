@@ -19,6 +19,8 @@ class DashboardToolBar : public QWidget {
     void set_connected(bool connected);
 
   signals:
+    void symbol_group_changed(const QString& symbol);
+    void timeframe_group_changed(const QString& tf);
     void add_widget_clicked();
     void save_layout_clicked();
     void reset_layout_clicked();
@@ -30,6 +32,9 @@ class DashboardToolBar : public QWidget {
     void showEvent(QShowEvent* event) override;
     void hideEvent(QHideEvent* event) override;
     void changeEvent(QEvent* event) override;
+
+  public slots:
+    void set_multichart_controls_visible(bool visible);
 
   private:
     void update_clock();
@@ -50,6 +55,11 @@ class DashboardToolBar : public QWidget {
     QPushButton* add_btn_ = nullptr;
     QPushButton* save_btn_ = nullptr;
     QPushButton* reset_btn_ = nullptr;
+
+    QWidget* multichart_group_ = nullptr;
+    QLineEdit* group_symbol_input_ = nullptr;
+    QComboBox* group_tf_picker_ = nullptr;
+
     QTimer clock_timer_;
 };
 
