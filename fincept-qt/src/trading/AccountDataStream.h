@@ -64,7 +64,8 @@ class AccountDataStream : public QObject {
     void holdings_updated(const QString& account_id, const QVector<BrokerHolding>& holdings);
     void orders_updated(const QString& account_id, const QVector<BrokerOrderInfo>& orders);
     void funds_updated(const QString& account_id, const BrokerFunds& funds);
-    void candles_fetched(const QString& account_id, const QVector<BrokerCandle>& candles);
+    void candles_fetched(const QString& account_id, const QString& symbol, const QString& timeframe,
+                         const QVector<BrokerCandle>& candles);
     void orderbook_fetched(const QString& account_id,
                            const QVector<QPair<double, double>>& bids,
                            const QVector<QPair<double, double>>& asks,

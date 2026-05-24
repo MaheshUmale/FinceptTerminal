@@ -179,8 +179,23 @@ void CommandBar::on_asset_results(const QJsonArray& results) {
         return;
     }
 
-    for (const auto& val : results) {
-        const auto obj = val.toObject();
+    // Prioritize Indian symbols (.NS, .BO) and NSE/BSE exchanges
+    QVector<QJsonObject> sorted_results;
+    for (const auto& val : results)
+        sorted_results.append(val.toObject());
+
+    std::stable_sort(sorted_results.begin(), sorted_results.end(), [](const QJsonObject& a, const QJsonObject& b) {
+        auto is_indian = [](const QJsonObject& o) {
+            const QString exch = o["exchange"].toString().toUpper();
+            const QString sym = o["symbol"].toString().toUpper();
+            return exch == "NSE" || exch == "BSE" || sym.endsWith(".NS") || sym.endsWith(".BO");
+        };
+        bool a_in = is_indian(a);
+        bool b_in = is_indian(b);
+        return a_in && !b_in;
+    });
+
+    for (const auto& obj : sorted_results) {
         const QString symbol = obj["symbol"].toString();
         const QString name = obj["name"].toString();
         const QString exchange = obj["exchange"].toString();

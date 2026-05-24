@@ -12,6 +12,9 @@ class BrokerChartWidget : public BaseWidget {
   public:
     explicit BrokerChartWidget(const QJsonObject& config = {}, QWidget* parent = nullptr);
 
+    QJsonObject config() const override;
+    void apply_config(const QJsonObject& cfg) override;
+
   protected:
     void showEvent(QShowEvent* e) override;
     void hideEvent(QHideEvent* e) override;

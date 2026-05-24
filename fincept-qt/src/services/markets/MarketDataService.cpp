@@ -709,20 +709,26 @@ QVector<MarketCategory> MarketDataService::default_global_markets() {
 
 QVector<RegionalMarket> MarketDataService::default_regional_markets() {
     return {
-        {"India",
+        {"India (NSE)",
          {
              {"RELIANCE.NS", "Reliance Industries"},
              {"TCS.NS", "Tata Consultancy"},
              {"HDFCBANK.NS", "HDFC Bank"},
              {"INFY.NS", "Infosys"},
-             {"HINDUNILVR.NS", "Hindustan Unilever"},
              {"ICICIBANK.NS", "ICICI Bank"},
              {"SBIN.NS", "State Bank of India"},
              {"BHARTIARTL.NS", "Bharti Airtel"},
              {"ITC.NS", "ITC Limited"},
              {"KOTAKBANK.NS", "Kotak Mahindra Bank"},
              {"LT.NS", "Larsen & Toubro"},
+             {"AXISBANK.NS", "Axis Bank"},
+             {"BAJFINANCE.NS", "Bajaj Finance"},
+             {"HINDUNILVR.NS", "Hindustan Unilever"},
+             {"M&M.NS", "Mahindra & Mahindra"},
+             {"ADANIENT.NS", "Adani Enterprises"},
+             {"SUNPHARMA.NS", "Sun Pharma"},
              {"WIPRO.NS", "Wipro Limited"},
+             {"TITAN.NS", "Titan Company"},
          }},
         {"China",
          {

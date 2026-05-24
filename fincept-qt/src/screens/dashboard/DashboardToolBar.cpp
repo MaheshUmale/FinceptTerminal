@@ -3,7 +3,9 @@
 #include "ui/theme/Theme.h"
 #include "ui/theme/ThemeManager.h"
 
+#include <QComboBox>
 #include <QHBoxLayout>
+#include <QLineEdit>
 #include <QPalette>
 #include <QStyle>
 
@@ -83,6 +85,44 @@ DashboardToolBar::DashboardToolBar(QWidget* parent) : QWidget(parent) {
     ll->addWidget(widget_count_);
 
     hl->addWidget(left);
+
+    // ── Multichart Controls (middle) ──
+    multichart_group_ = new QWidget(this);
+    auto* ml = new QHBoxLayout(multichart_group_);
+    ml->setContentsMargins(20, 0, 20, 0);
+    ml->setSpacing(8);
+
+    make_sep(ml);
+
+    auto* sym_lbl = new QLabel(tr("GROUP SYMBOL:"));
+    sym_lbl->setObjectName("dtSep");
+    ml->addWidget(sym_lbl);
+
+    group_symbol_input_ = new QLineEdit;
+    group_symbol_input_->setPlaceholderText(tr("RELIANCE..."));
+    group_symbol_input_->setFixedWidth(100);
+    group_symbol_input_->setObjectName("dtInput");
+    connect(group_symbol_input_, &QLineEdit::returnPressed, this, [this]() {
+        emit symbol_group_changed(group_symbol_input_->text().trimmed().toUpper());
+    });
+    ml->addWidget(group_symbol_input_);
+
+    auto* tf_lbl = new QLabel(tr("TF:"));
+    tf_lbl->setObjectName("dtSep");
+    ml->addWidget(tf_lbl);
+
+    group_tf_picker_ = new QComboBox;
+    group_tf_picker_->addItems({"1m", "5m", "15m", "1h", "1d", "1w"});
+    group_tf_picker_->setCurrentText("15m");
+    group_tf_picker_->setObjectName("dtCombo");
+    connect(group_tf_picker_, &QComboBox::currentTextChanged, this, &DashboardToolBar::timeframe_group_changed);
+    ml->addWidget(group_tf_picker_);
+
+    make_sep(ml);
+
+    multichart_group_->setVisible(false);
+    hl->addWidget(multichart_group_);
+
     hl->addStretch();
 
     right_container_ = new QWidget(this);
@@ -158,7 +198,7 @@ void DashboardToolBar::refresh_theme() {
 
     setStyleSheet(
         QString("#dashToolBar { background:%1; border-bottom:1px solid %2; }"
-                "#dtLeftContainer, #dtRightContainer { background:%1; }"
+                "#dtLeftContainer, #dtRightContainer, #multichart_group { background:%1; }"
                 "#dtSep { color:%3; background:transparent; }"
                 "#dtBrand { color:%4; font-weight:bold; letter-spacing:1px; background:transparent; }"
                 "#dtSub { color:%5; font-weight:bold; background:transparent; }"
@@ -170,7 +210,9 @@ void DashboardToolBar::refresh_theme() {
                 "#dtAddBtn { background:%9; border:1px solid %13; color:%4; padding:0 10px; font-weight:bold; }"
                 "#dtAddBtn:hover { background:%10; color:%11; border-color:%12; }"
                 "#dtResetBtn { background:%9; border:1px solid %14; color:%14; padding:0 10px; font-weight:bold; }"
-                "#dtResetBtn:hover { background:%10; color:%11; border-color:%12; }")
+                "#dtResetBtn:hover { background:%10; color:%11; border-color:%12; }"
+                "#dtInput { background:%1; border:1px solid %3; color:%11; font-family:Consolas; font-size:10px; padding:2px; }"
+                "#dtCombo { background:%1; border:1px solid %3; color:%11; font-size:10px; }")
             .arg(ui::colors::BG_SURFACE())     // %1
             .arg(ui::colors::BORDER_DIM())     // %2
             .arg(ui::colors::BORDER_MED())     // %3
@@ -206,6 +248,11 @@ void DashboardToolBar::showEvent(QShowEvent* event) {
     update_clock();
     if (!clock_timer_.isActive())
         clock_timer_.start();
+}
+
+void DashboardToolBar::set_multichart_controls_visible(bool visible) {
+    if (multichart_group_)
+        multichart_group_->setVisible(visible);
 }
 
 void DashboardToolBar::update_clock() {

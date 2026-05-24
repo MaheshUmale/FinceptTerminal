@@ -4,6 +4,8 @@
 #include "screens/dashboard/widgets/BrokerChartWidget.h"
 #include "screens/dashboard/widgets/BrokerHoldingsWidget.h"
 #include "screens/dashboard/widgets/BrokerQuoteWidget.h"
+#include "screens/dashboard/widgets/IndiaMarketPulseWidget.h"
+#include "screens/dashboard/widgets/MasterPortfolioWidget.h"
 #include "screens/dashboard/widgets/CommoditiesWidget.h"
 #include "screens/dashboard/widgets/CryptoTickerWidget.h"
 #include "screens/dashboard/widgets/CryptoWidget.h"
@@ -126,9 +128,17 @@ WidgetRegistry::WidgetRegistry() {
                      QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Aggregate broker account P&L — total, day, realized, open positions"), 3, 4, 2, 3,
                      [](const QJsonObject& cfg) { return new widgets::TodayPnLWidget(cfg); }});
 
+    register_widget({"india_pulse", QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "India Market Pulse"), QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Markets"),
+                     QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "NSE Advance/Decline and volume gainers"), 4, 5, 3, 4,
+                     [](const QJsonObject&) { return new widgets::IndiaMarketPulseWidget; }});
+
     register_widget({"holdings", QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Holdings"), QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Portfolio"),
                      QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Long-term broker holdings — avg cost, LTP, P&L %"), 6, 5, 3, 3,
                      [](const QJsonObject& cfg) { return new widgets::BrokerHoldingsWidget(cfg); }});
+
+    register_widget({"master_portfolio", QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Master Portfolio"), QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Portfolio"),
+                     QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Consolidated wealth across all connected brokers"), 6, 5, 4, 3,
+                     [](const QJsonObject&) { return new widgets::MasterPortfolioWidget; }});
 
     register_widget({"broker_quote", QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Broker Quote"), QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Trading"),
                      QT_TRANSLATE_NOOP("fincept::screens::WidgetRegistry", "Real-time quote from connected Indian/Global brokers"), 4, 5, 2, 3,

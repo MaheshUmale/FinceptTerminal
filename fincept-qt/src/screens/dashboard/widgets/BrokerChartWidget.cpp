@@ -40,6 +40,33 @@ BrokerChartWidget::BrokerChartWidget(const QJsonObject& config, QWidget* parent)
     set_loading(true);
 }
 
+QJsonObject BrokerChartWidget::config() const {
+    QJsonObject cfg;
+    cfg["broker_id"] = broker_id_;
+    cfg["account_id"] = account_id_;
+    cfg["symbol"] = symbol_;
+    cfg["timeframe"] = timeframe_;
+    return cfg;
+}
+
+void BrokerChartWidget::apply_config(const QJsonObject& cfg) {
+    if (cfg.contains("symbol"))
+        symbol_ = cfg.value("symbol").toString().toUpper();
+    if (cfg.contains("timeframe"))
+        timeframe_ = cfg.value("timeframe").toString();
+    if (cfg.contains("account_id"))
+        account_id_ = cfg.value("account_id").toString();
+    if (cfg.contains("broker_id"))
+        broker_id_ = cfg.value("broker_id").toString();
+
+    set_title(tr("CHART: %1").arg(symbol_.toUpper()));
+
+    if (isVisible()) {
+        hub_resubscribe();
+        refresh_data();
+    }
+}
+
 void BrokerChartWidget::showEvent(QShowEvent* e) {
     BaseWidget::showEvent(e);
     if (!hub_active_)
